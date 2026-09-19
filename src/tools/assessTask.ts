@@ -4,6 +4,7 @@ import { TASK_ASSESSMENT_QUESTIONS } from "../jev/rubrics.js";
 import { scanSkills } from "../skills/scanner.js";
 import { matchSkillsForTask } from "../skills/matcher.js";
 import { loadConfig } from "../config.js";
+import { resolveWorkingDirectory } from "../utils/workspace.js";
 import {
   ComplexityTier,
   ReasoningBudget,
@@ -30,7 +31,7 @@ export async function handleAssessTask(args: {
   context_files?: string[];
   working_directory?: string;
 }): Promise<TaskAssessmentResult> {
-  const cwd = args.working_directory || process.cwd();
+  const cwd = resolveWorkingDirectory(args.working_directory);
   const config = loadConfig(cwd);
 
   logger.info(`Assessing task: "${args.task_description.slice(0, 80)}..."`);

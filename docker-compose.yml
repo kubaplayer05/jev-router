@@ -1,0 +1,42 @@
+services:
+  jev-router:
+    build: .
+    image: jev-router:latest
+    container_name: jev-router
+    ports:
+      - "${PORT:-3333}:3333"
+    env_file:
+      - .env
+    environment:
+      PORT: 3333
+      HOST: 0.0.0.0
+      # TYPESAFE_API_KEY is loaded from .env; uncomment to override:
+      # TYPESAFE_API_KEY: ${TYPESAFE_API_KEY}
+      # JEV_MAX_RETRIES: ${JEV_MAX_RETRIES:-5}
+    restart: unless-stopped
+    # Workspace mounts: the container only sees what you mount.
+    # Without these, list_skills returns {"count":0} and pre-checks
+    # (evaluate_code) run against /app instead of your project.
+    volumes:
+      # Portable: project checkout at /workspace inside the container.
+      # Pass working_directory=/workspace in tool calls.
+      - "${HOST_WORKSPACE:-./}:/workspace:ro"
+      # Reusable transparent host paths (no hardcoded usernames):
+      # mirrors the host home at the identical absolute path (read-only),
+      # so any host working_directory under $HOME resolves inside the container.
+      # Override with HOST_HOME if your checkout lives outside $HOME.
+      - type: bind
+        source: ${HOST_HOME:-${HOME}}
+        target: ${HOST_HOME:-${HOME}}
+        read_only: true
+      # Global skills (e.g. installed via opencode on the host).
+      - type: bind
+        source: ${HOME}/.config/opencode/skills
+        target: /home/appuser/.config/opencode/skills
+        read_only: true
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3333/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

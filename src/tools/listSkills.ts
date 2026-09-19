@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { scanSkills } from "../skills/scanner.js";
 import { loadConfig } from "../config.js";
+import { resolveWorkingDirectory } from "../utils/workspace.js";
 import { InstalledSkill } from "../types.js";
 
 export const listSkillsSchema = {
@@ -13,7 +14,7 @@ export const listSkillsSchema = {
 export async function handleListSkills(args: {
   working_directory?: string;
 }): Promise<{ count: number; skills: InstalledSkill[] }> {
-  const cwd = args.working_directory || process.cwd();
+  const cwd = resolveWorkingDirectory(args.working_directory);
   const config = loadConfig(cwd);
   const skills = scanSkills(cwd, config);
 

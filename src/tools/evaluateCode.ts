@@ -4,6 +4,7 @@ import { CODE_EVALUATION_QUESTIONS } from "../jev/rubrics.js";
 import { runPreCheck } from "../prechecks/runner.js";
 import { retryManager } from "../session/retryManager.js";
 import { loadConfig } from "../config.js";
+import { resolveWorkingDirectory } from "../utils/workspace.js";
 import { CodeEvaluationResult, CodeRubricResult } from "../types.js";
 import { logger } from "../utils/logger.js";
 
@@ -30,7 +31,7 @@ export async function handleEvaluateCode(args: {
   working_directory?: string;
   session_id?: string;
 }): Promise<CodeEvaluationResult> {
-  const cwd = args.working_directory || process.cwd();
+  const cwd = resolveWorkingDirectory(args.working_directory);
   const config = loadConfig(cwd);
 
   const sessionKey = retryManager.getSessionKey(args.session_id, args.task_intent);

@@ -1,0 +1,17 @@
+node_modules/
+dist/
+build/
+.git/
+.gitignore
+.opencode/
+coverage/
+*.log
+pnpm-debug.log*
+.env
+.env.*
+!.env.example
+Dockerfile
+docker-compose*.yml
+.vscode/
+.idea/
+.DS_Store

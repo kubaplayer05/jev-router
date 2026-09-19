@@ -2,6 +2,7 @@ import { z } from "zod";
 import { jevEngine } from "../jev/client.js";
 import { PLAN_EVALUATION_QUESTIONS } from "../jev/rubrics.js";
 import { loadConfig } from "../config.js";
+import { resolveWorkingDirectory } from "../utils/workspace.js";
 import { PlanEvaluationResult } from "../types.js";
 import { logger } from "../utils/logger.js";
 
@@ -28,7 +29,7 @@ export async function handleEvaluatePlan(args: {
   affected_files?: string[];
   working_directory?: string;
 }): Promise<PlanEvaluationResult> {
-  const cwd = args.working_directory || process.cwd();
+  const cwd = resolveWorkingDirectory(args.working_directory);
   const config = loadConfig(cwd);
 
   logger.info(
