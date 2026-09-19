@@ -1,0 +1,11 @@
+{
+  "mcp": {
+    "servers": {
+      "jev-router": {
+        "type": "remote",
+        "url": "http://localhost:3333/sse",
+        "enabled": true
+      }
+    }
+  }
+}

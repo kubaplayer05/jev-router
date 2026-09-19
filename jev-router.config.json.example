@@ -1,0 +1,16 @@
+{
+  "max_retries": 5,
+  "thresholds": {
+    "min_code_quality": 3.8,
+    "min_plan_clarity": 3.5,
+    "min_safety_confidence": 0.80
+  },
+  "deterministic_checks": {
+    "enabled": true,
+    "custom_command": "pnpm run lint",
+    "timeout_ms": 20000
+  },
+  "skills": {
+    "extra_paths": []
+  }
+}
